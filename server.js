@@ -3,100 +3,30 @@ dotenv.config();
 import express from 'express';
 const app = express();
 import morgan from 'morgan';
-import { nanoid } from 'nanoid';
 
-fetch('https://dummyjson.com/test')
-.then((res) => res.json())
-.then((data)=>console.log(data));
+
+import jobRouter from './routes/jobRouter.js';
+app.use('/api/v1/jobs', jobRouter);
+
 
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
   }
 
-  let jobs = [
-    { id: nanoid(), company: 'apple', position: 'front-end' },
-    { id: nanoid(), company: 'google', position: 'back-end' },
-  ];
-
-
-
-
 app.use(morgan('dev'));
 app.use(express.json());
 
-fetch('https://dummyjson.com/products')
-.then((res) => res.json())
-.then((data)=>console.log(data));
 
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
-app.post('/', (req, res) => {
-    console.log(req);
-    res.json({ message: 'Data received', data: req.body });
-})
-//GET ALL JOBS
-app.get('/api/v1/jobs', (req, res) => {
-    res.status(200).json({ jobs });
-
-})
-//GET single JOBS
-app.get('/api/v1/jobs/:id', (req, res) => {
-    const { id } = req.params;
-    const job = jobs.find((job) => job.id === id);
-    if (!job) {
-      return res.status(404).json({ msg: `no job with id: ${id}` });
-    }
-    res.status(200).json({ job });
-});
-
-//CREATE A JOB
-app.post('/api/v1/jobs', (req, res) => {
-    const { company, position } = req.body;
-    if (!company || !position) {
-      return res.status(400).json({ msg: 'please provide company and position' });
-    }
-    const id = nanoid(10);
-    // console.log(id);
-    const job = { id, company, position };
-    jobs.push(job);
-    res.status(200).json({ job });
-  });
-
-//EDIT A JOB
-
-app.patch('/api/v1/jobs/:id', (req, res) => {
-
-  const{company, position}=req.body;
-  if(!company || !position){
-    return res.status(400).json({msg:'please provide company and position'});
-  }
-  const { id } = req.params;
-  const job = jobs.find((job) => job.id === id);
-  if (!job) {
-    return res.status(404).json({ msg: `no job with id: ${id}` });
-  }
-  job.company=company;
-  job.position=position;
-  res.status(200).json({message:"job modified", job });
-
-
-});
-
-//DDELETE A JOB
-app.delete('/api/v1/jobs/:id', (req, res) => {
-  const { id } = req.params;
-  const job = jobs.find((job) => job.id === id);
-  if (!job) {
-    return res.status(404).json({ msg: `no job with id: ${id}` });
-  }
-  const newJobs = jobs.filter((job) => job.id !== id);
-  jobs=newJobs;
-  res.status(200).json({message:"job deleted", newJobs });   
+app.use('*', (req, res) => {
+  res.status(404).json({ msg: 'route does not exist' });
 }
 );
 
-
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ msg: 'something went wrong, please try again' });
+}
+);
 
 const port = process.env.POST || 5100;
 
