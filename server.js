@@ -6,7 +6,7 @@ import morgan from 'morgan';
 
 
 import jobRouter from './routes/jobRouter.js';
-app.use('/api/v1/jobs', jobRouter);
+
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(morgan('dev'));
 app.use(express.json());
-
+app.use('/api/v1/jobs', jobRouter);
 
 app.use('*', (req, res) => {
   res.status(404).json({ msg: 'route does not exist' });
