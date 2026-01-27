@@ -5,7 +5,7 @@ import express from 'express';
 const app = express();
 import morgan from 'morgan';
 import mongoose from 'mongoose';
-
+import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 
 import jobRouter from './routes/jobRouter.js';
 
@@ -24,11 +24,7 @@ app.use('*', (req, res) => {
 }
 );
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ msg: 'something went wrong, please try again' });
-}
-);
+app.use(errorHandlerMiddleware);
 
 const port = process.env.POST || 5100;
 
