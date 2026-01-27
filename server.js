@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 
 import jobRouter from './routes/jobRouter.js';
-import {validateTest} from './middleware/validationMiddleware.js';
+
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -19,13 +19,6 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use('/api/v1/jobs', jobRouter);
 
-
-app.post('/api/v1/test', validateTest,  
-
-(req, res) => {
-  const {name} = req.body;
-  res.status(200).json({msg:`hello ${name}`});
-});
 
 app.use('*', (req, res) => {
   res.status(404).json({ msg: 'route does not exist' });

@@ -8,8 +8,8 @@ export const getAllJobs = async (req, res) => {
 };
 
 export const createJob = async (req, res) => {
-  const { company, position} = req.body;
-  const job = await Job.create({ company, position});
+  const { company, position,jobLocation } = req.body;
+  const job = await Job.create({ company, position,jobLocation});
   res.status(StatusCodes.CREATED).json({ job });
 };
 
