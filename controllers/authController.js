@@ -5,6 +5,8 @@ import { hashPassword, comparePassword } from '../utils/passwordUtils.js';
 import { createJWT } from '../utils/tokenUtils.js';
 
 export const register = async (req, res) => {
+  const count = await User.countDocuments();
+  console.log(`Current user count: ${count}`); // Check this in your terminal
 const isFirstAccount = (await User.countDocuments()) === 0;
 req.body.role = isFirstAccount ? 'admin' : 'user';
 
@@ -28,7 +30,7 @@ if (!isValidUser) throw new UnauthenticatedError('invalid credentials');
 
   const token = createJWT({ userId: user._id, role: user.role });
   const oneDay = 1000 * 60 * 60 * 24;
-  
+
   res.cookie('token', token, {
     httpOnly: true,
     expires: new Date(Date.now() + oneDay),
@@ -37,3 +39,4 @@ if (!isValidUser) throw new UnauthenticatedError('invalid credentials');
   res.status(StatusCodes.OK).json({ msg: 'user logged in' });
 
   };
+
