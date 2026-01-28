@@ -12,6 +12,9 @@ const withValidationErrors = (validateValues) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         const errorMessages = errors.array().map((error) => error.msg);
+        if (errorMessages[0].startsWith('not authorized')) {
+          throw new UnauthorizedError('not authorized to access this route');
+        }
         throw new BadRequestError(errorMessages);
       }
       next();
@@ -34,7 +37,12 @@ export const validateJobInput = withValidationErrors([
       if (!isValidId) throw new BadRequestError('invalid MongoDB id');
       const job = await Job.findById(value);
       if (!job) throw new NotFoundError(`no job with id : ${value}`);
-    }),
+
+    const isAdmin = req.user.role === 'admin';
+    const isOwner = req.user.userId === job.createdBy.toString();
+    if (!isAdmin && !isOwner)
+      throw new  UnauthorizedError('not authorized to access this route');
+}),
   ]);
 
   export const validateRegisterInput = withValidationErrors([
