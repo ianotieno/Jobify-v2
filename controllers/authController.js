@@ -40,7 +40,7 @@ if (!isValidUser) throw new UnauthenticatedError('invalid credentials');
 
   };
 
-  const logout = (req, res) => {
+  export const logout = (req, res) => {
     res.cookie('token', 'logout', {
       httpOnly: true,
       expires: new Date(Date.now()),
