@@ -42,10 +42,13 @@ cloudinary.config({
   api_secret: process.env.CLOUD_API_SECRET,
 });
 
-app.use('*', (req, res) => {
-  res.status(404).json({ msg: 'route does not exist' });
-}
-);
+// 2. Point to your frontend build folder (Vite uses 'dist' by default)
+app.use(express.static(path.resolve(__dirname, './public'))); 
+
+// 3. THE KEY: Direct all other GET requests to the index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, './public', 'index.html'));
+});
 
 app.use(errorHandlerMiddleware);
 
