@@ -42,10 +42,13 @@ cloudinary.config({
   api_secret: process.env.CLOUD_API_SECRET,
 });
 
-app.use('*', (req, res) => {
-  res.status(404).json({ msg: 'route does not exist' });
-}
-);
+const clientPath = path.resolve(__dirname, './client/dist');
+app.use(express.static(clientPath));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(clientPath, 'index.html'));
+});
+
 
 app.use(errorHandlerMiddleware);
 
