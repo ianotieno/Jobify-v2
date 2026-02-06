@@ -2,7 +2,7 @@
 import { useState, createContext, useContext } from 'react';
 import { Outlet,redirect, useLoaderData  } from 'react-router-dom';
 import Wrapper from '../assets/wrappers/Dashboard';
-import { Navbar, BigSidebar, SmallSidebar } from '../components';
+import { Navbar} from '../components';
 import customFetch from '../utils/customFetch';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -58,8 +58,7 @@ const Dashboard = ({isDarkThemeEnabled}) => {
     >
       <Wrapper>
         <main className='dashboard'>
-          <BigSidebar />
-          <SmallSidebar />
+          
           <div>
             <Navbar />
             <div className='dashboard-page'>
